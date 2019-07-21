@@ -14,3 +14,44 @@ server:
 spring:
   profiles:
     active: dev
+
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      url: # required [jdbc:mysql://localhost:3306/db_name]
+      username: # required
+      password: # required
+      initial-size: 1
+      max-active: 20
+      min-idle: 1
+      max-wait: 60000
+      pool-prepared-statements: true # 打开PSCache，并且指定每个连接上PSCache的大小
+      max-pool-prepared-statement-per-connection-size: 20
+      validation-query: SELECT 'x'
+      test-on-borrow: false
+      test-on-return: false
+      test-while-idle: true
+      time-between-eviction-runs-millis: 60000 # 定期检测空闲连接
+      min-evictable-idle-time-millis: 300000
+
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.linfq.chat.model
+  configuration:
+    map-underscore-to-camel-case: true
+    database-id: mysql
+#    default-enum-type-handler: com.fwxgx.core.orm.handler.EnumTypeHandler
+
+# tkmybatis
+mapper:
+  not-empty: true
+  identity: MYSQL
+#  enum-as-simple-type: false # 处理枚举类型
+
+# pagehelper
+pagehelper:
+  helperDialect: mysql
+  reasonable: false
+  supportMethodsArguments: true
+  params: count=countSql

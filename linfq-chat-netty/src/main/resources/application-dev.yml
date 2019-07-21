@@ -1,0 +1,13 @@
+# 日志配置
+logging:
+  level:
+    root: info
+    com.linfq: info
+
+
+spring:
+  datasource:
+    druid:
+      url: jdbc:mysql://localhost:3306/muxin_dev?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+      username: root
+      password:
