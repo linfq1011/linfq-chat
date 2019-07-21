@@ -1,8 +1,21 @@
-plugins {
-    id 'java'
+buildscript {
+    ext {
+        springBootVersion = '2.0.3.RELEASE'
+    }
+    repositories {
+        maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
 }
 
-group 'com.linfq.learn'
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group 'com.linfq.chat'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
@@ -21,23 +34,19 @@ dependencies {
     // lombok
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.16.22'
 
+    // spring
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+    compile group: 'org.springframework.boot', name: 'spring-boot-configuration-processor'
+
+    // commons
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+    compile group: 'commons-io', name: 'commons-io', version: '2.6'
+    compile group: 'commons-codec', name: 'commons-codec', version: '1.12'
+
+
     // java ee
     compile group: 'javax.persistence', name: 'persistence-api', version: '1.0'
-
-
-    // spring
-    compile group: 'org.springframework', name: 'spring-context', version: '5.0.7.RELEASE'
-
-    // hadoop
-    // hdfs
-    compile group: 'org.apache.hadoop', name: 'hadoop-common', version: '2.7.3'
-    compile group: 'org.apache.hadoop', name: 'hadoop-hdfs', version: '2.7.3'
-    // mapreduce
-    compile group: 'org.apache.hadoop', name: 'hadoop-mapreduce-client-core', version: '2.7.3'
-    compile group: 'org.apache.hadoop', name: 'hadoop-mapreduce-client-common', version: '2.7.3'
-    // yarn
-    compile group: 'org.apache.hadoop', name: 'hadoop-yarn-common', version: '2.7.3'
-
 
     // mysql
     compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.30'

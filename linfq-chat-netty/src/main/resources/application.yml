@@ -1,0 +1,16 @@
+# 日志配置
+logging:
+  level:
+    root: info
+    com.linfq: info
+
+# Server 服务端配置
+server:
+  port: 8080
+  tomcat:
+    uri-encoding: UTF-8
+
+# spring配置
+spring:
+  profiles:
+    active: dev
