@@ -68,6 +68,26 @@ public abstract class BaseService<T extends BaseModel> {
 	}
 
 	/**
+	 * 根据实体中的属性进行查询，只能有一个返回值，有多个结果是抛出异常，查询条件使用等号.
+	 *
+	 * @param t 实体（查询条件）
+	 * @return 实体（结果）
+	 */
+	public Optional<T> get(T t) {
+		return Optional.ofNullable(this.mapper.selectOne(t));
+	}
+
+	/**
+	 * 根据example查询一个，有多个结果是抛出异常.
+	 *
+	 * @param example 条件
+	 * @return 实体
+	 */
+	public Optional<T> getByExample(Example example) {
+		return Optional.ofNullable(this.mapper.selectOneByExample(example));
+	}
+
+	/**
 	 * 添加一条.
 	 *
 	 * @param t 实体
