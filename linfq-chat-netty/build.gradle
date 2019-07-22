@@ -30,6 +30,7 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile group: 'org.springframework', name: 'spring-test'
 
     // lombok
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.16.22'
@@ -57,6 +58,10 @@ dependencies {
 
     // netty
     compile group: 'io.netty', name: 'netty-all', version: '4.1.25.Final'
+
+    // 高性能分布式文件服务器
+    compile group: 'com.github.tobato', name: 'fastdfs-client', version: '1.26.2'
+
 
 
 
