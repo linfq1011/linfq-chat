@@ -26,3 +26,8 @@
 
 ### gradle ###
 .gradle
+
+### Generated files ###
+*/bin/
+*/gen/
+*/out/
