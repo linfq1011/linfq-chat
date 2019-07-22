@@ -53,6 +53,7 @@ public class UserService extends BaseService<User> {
 	 * @param user
 	 * @return
 	 */
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor=Exception.class)
 	public User saveUser(User user) {
 		// TODO 为每个用户生成一个唯一的二维码
 		user.setQrcode("");

@@ -61,6 +61,7 @@ public abstract class BaseService<T extends BaseModel> {
 	 *
 	 * @return 实体
 	 */
+	@Transactional(propagation = Propagation.SUPPORTS, rollbackFor=Exception.class)
 	public Optional<T> get(Integer id) {
 		T t = this.createModel();
 		t.setId(id);
@@ -73,6 +74,7 @@ public abstract class BaseService<T extends BaseModel> {
 	 * @param t 实体（查询条件）
 	 * @return 实体（结果）
 	 */
+	@Transactional(propagation = Propagation.SUPPORTS, rollbackFor=Exception.class)
 	public Optional<T> get(T t) {
 		return Optional.ofNullable(this.mapper.selectOne(t));
 	}
@@ -83,6 +85,7 @@ public abstract class BaseService<T extends BaseModel> {
 	 * @param example 条件
 	 * @return 实体
 	 */
+	@Transactional(propagation = Propagation.SUPPORTS, rollbackFor=Exception.class)
 	public Optional<T> getByExample(Example example) {
 		return Optional.ofNullable(this.mapper.selectOneByExample(example));
 	}
@@ -110,6 +113,18 @@ public abstract class BaseService<T extends BaseModel> {
 	}
 
 	/**
+	 * 保存一条（忽略为null的字段），返回持久化对象.
+	 *
+	 * @param t
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor=Exception.class)
+	public T save(T t) {
+		this.update(t);
+		return this.mapper.selectByPrimaryKey(t.getId());
+	}
+
+	/**
 	 * 删除一条.
 	 *
 	 * @param id 主键
@@ -126,6 +141,7 @@ public abstract class BaseService<T extends BaseModel> {
 	 *
 	 * @return 集合
 	 */
+	@Transactional(propagation = Propagation.SUPPORTS, rollbackFor=Exception.class)
 	public List<T> listAll() {
 		return this.mapper.selectAll();
 	}
@@ -136,6 +152,7 @@ public abstract class BaseService<T extends BaseModel> {
 	 * @param example 条件
 	 * @return 集合
 	 */
+	@Transactional(propagation = Propagation.SUPPORTS, rollbackFor=Exception.class)
 	public List<T> listByExample(Example example) {
 		return this.mapper.selectByExample(example);
 	}
@@ -146,6 +163,7 @@ public abstract class BaseService<T extends BaseModel> {
 	 * @param example 条件
 	 * @return 数量
 	 */
+	@Transactional(propagation = Propagation.SUPPORTS, rollbackFor=Exception.class)
 	public int countByExample(Example example) {
 		return this.mapper.selectCountByExample(example);
 	}
