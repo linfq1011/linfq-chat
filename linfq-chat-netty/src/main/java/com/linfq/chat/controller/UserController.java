@@ -7,9 +7,11 @@ import com.linfq.chat.common.util.FileUtils;
 import com.linfq.chat.common.util.ResultVo;
 import com.linfq.chat.model.User;
 import com.linfq.chat.service.FriendRequestService;
+import com.linfq.chat.service.MyFriendService;
 import com.linfq.chat.service.UserService;
 import com.linfq.chat.vo.UserBo;
 import com.linfq.chat.vo.UserVo;
+import com.linfq.chat.vo.orm.MyFriendResultVo;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -38,6 +41,8 @@ public class UserController {
 	private FastDFSClient fastDFSClient;
 	@Autowired
 	private FriendRequestService friendRequestService;
+	@Autowired
+	private MyFriendService myFriendService;
 
 	/**
 	 * 用户登录/注册.
@@ -239,8 +244,25 @@ public class UserController {
 			friendRequestService.passFriendRequest(sendUserId, acceptUserId);
 		}
 
-		// TODO 刷新通讯录
+		// 4. 数据库查询好友列表
+		List<MyFriendResultVo> myFirends = myFriendService.listMyFriends(acceptUserId);
 
-		return ResultVo.ok();
+		return ResultVo.ok(myFirends);
+	}
+
+	/**
+	 * 查询我的好友列表
+	 */
+	@PostMapping("/myFriends")
+	public ResultVo myFriends(Integer userId) {
+		// 0. userId 判断不能为空
+		if (userId == null) {
+			return ResultVo.errorMsg("");
+		}
+
+		// 1. 数据库查询好友列表
+		List<MyFriendResultVo> myFirends = myFriendService.listMyFriends(userId);
+
+		return ResultVo.ok(myFirends);
 	}
 }

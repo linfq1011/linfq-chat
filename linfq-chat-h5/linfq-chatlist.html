@@ -384,9 +384,9 @@
 					headers:{'Content-Type':'application/json'},	              
 					success:function(data){
 						
-						// TODO 更新通讯录
-						// var myFriendList = data.data;
-						// app.setContactList(myFriendList);
+						// 更新通讯录
+						var myFriendList = data.data;
+						app.setContactList(myFriendList);
 						
 						// 重新加载好友请求记录
 						loadingFriendRequests();

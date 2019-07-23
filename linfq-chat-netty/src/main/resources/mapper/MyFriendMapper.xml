@@ -13,4 +13,20 @@
     id, create_time, update_time, my_user_id, my_friend_user_id
   </sql>
 
+  <!-- 查询好友请求 -->
+  <select id="selectMyFriends" resultType="com.linfq.chat.vo.orm.MyFriendResultVo"
+          parameterType="java.lang.Integer">
+    SELECT
+      u.id AS friendUserId,
+      u.username AS friendUsername,
+      u.face_image AS friendFaceImage,
+      u.nickname AS friendNickname
+    FROM
+      my_friend mf
+    LEFT JOIN `user` u ON mf.my_friend_user_id = u.id
+    WHERE
+      mf.my_user_id = #{userId}
+  </select>
+
+
 </mapper>

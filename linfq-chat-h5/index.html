@@ -103,7 +103,20 @@
 				}
 			});
 			
+			// 延时加载
+			setTimeout("initData()", "1000");
 		});
+		
+		/**
+		 * 预加载
+		 */
+		function initData() {
+			var linfq_chatlist = plus.webview.getWebviewById("linfq-chatlist.html");
+			mui.fire(linfq_chatlist, "refresh");
+			
+			var linfq_me = plus.webview.getWebviewById("linfq-me.html");
+			mui.fire(linfq_me, "refresh");
+		}
 	</script>
 </body>
 </html>
