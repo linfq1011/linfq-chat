@@ -107,6 +107,13 @@
 					})
 				});
 				
+				// 用户退出
+				var link_logout = document.getElementById("link_logout");
+				link_logout.addEventListener("tap", function(){
+					app.userLogout();
+					mui.openWindow("login.html", "login.html");
+				});
+				
 			});
 			
 			function refreshUserInfo() {
