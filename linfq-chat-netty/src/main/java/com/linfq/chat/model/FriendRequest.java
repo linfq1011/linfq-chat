@@ -17,11 +17,13 @@ import lombok.ToString;
 public class FriendRequest extends BaseModel {
 
     /**
+     * 发送者用户id.
      * send_user_id
      */
     private Integer sendUserId;
 
     /**
+     * 接收者用户id.
      * accept_user_id
      */
     private Integer acceptUserId;

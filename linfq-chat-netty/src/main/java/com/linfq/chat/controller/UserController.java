@@ -1,9 +1,12 @@
 package com.linfq.chat.controller;
 
+import com.linfq.chat.common.constant.OperatorFriendRequestTypeEnum;
+import com.linfq.chat.common.constant.SearchFriendsStatusEnum;
 import com.linfq.chat.common.util.FastDFSClient;
 import com.linfq.chat.common.util.FileUtils;
 import com.linfq.chat.common.util.ResultVo;
 import com.linfq.chat.model.User;
+import com.linfq.chat.service.FriendRequestService;
 import com.linfq.chat.service.UserService;
 import com.linfq.chat.vo.UserBo;
 import com.linfq.chat.vo.UserVo;
@@ -33,6 +36,8 @@ public class UserController {
 	private UserService userService;
 	@Autowired
 	private FastDFSClient fastDFSClient;
+	@Autowired
+	private FriendRequestService friendRequestService;
 
 	/**
 	 * 用户登录/注册.
@@ -133,4 +138,109 @@ public class UserController {
 		return ResultVo.ok(userVo);
 	}
 
+	/**
+	 * 搜索好友接口, 根据账号做匹配查询而不是模糊查询.
+	 *
+	 * @param myUserId 当前用户id
+	 * @param friendUsername 朋友用户名
+	 * @return
+	 */
+	@PostMapping("/search")
+	public ResultVo searchUser(Integer myUserId, String friendUsername) {
+		// 0. 判断 myUserId friendUsername 不能为空
+		if (myUserId == null || StringUtils.isBlank(friendUsername)) {
+			return ResultVo.errorMsg("");
+		}
+
+		// 前置条件 - 1. 搜索的用户如果不存在，返回[无此用户]
+		// 前置条件 - 2. 搜索账号是你自己，返回[不能添加自己]
+		// 前置条件 - 3. 搜索的朋友已经是你的好友，返回[该用户已经是你的好友]
+		SearchFriendsStatusEnum status = userService.preconditionSearchFriends(myUserId, friendUsername);
+		if (SearchFriendsStatusEnum.SUCCESS == status) {
+			Optional<User> userOptional = this.userService.getByUsername(friendUsername);
+			User user = userOptional.get();
+			UserVo userVo = new UserVo();
+			BeanUtils.copyProperties(user, userVo);
+			return ResultVo.ok(userVo);
+		} else {
+			return ResultVo.errorMsg(status.msg);
+		}
+	}
+
+	/**
+	 * 发送添加好友的请求.
+	 *
+	 * @param myUserId 当前用户id
+	 * @param friendUsername 朋友用户名
+	 * @return
+	 */
+	@PostMapping("/addFriendRequest")
+	public ResultVo addFriendRequest(Integer myUserId, String friendUsername) {
+		// 0. 判断 myUserId friendUsername 不能为空
+		if (myUserId == null || StringUtils.isBlank(friendUsername)) {
+			return ResultVo.errorMsg("");
+		}
+
+		// 前置条件 - 1. 搜索的用户如果不存在，返回[无此用户]
+		// 前置条件 - 2. 搜索账号是你自己，返回[不能添加自己]
+		// 前置条件 - 3. 搜索的朋友已经是你的好友，返回[该用户已经是你的好友]
+		SearchFriendsStatusEnum status = userService.preconditionSearchFriends(myUserId, friendUsername);
+		if (SearchFriendsStatusEnum.SUCCESS == status) {
+			userService.sendFriendRequest(myUserId, friendUsername);
+		} else {
+			return ResultVo.errorMsg(status.msg);
+		}
+
+		return ResultVo.ok();
+	}
+
+	/**
+	 * 查询好友请求
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@PostMapping("/queryFriendRequests")
+	public ResultVo queryFriendRequests(Integer userId) {
+		// 0. 判断 myUserId friendUsername 不能为空
+		if (userId == null) {
+			return ResultVo.errorMsg("");
+		}
+		// 1. 查询用户接收到的朋友申请
+		return ResultVo.ok(friendRequestService.listByAcceptUserId(userId));
+	}
+
+	/**
+	 * 通过或者忽略朋友请求
+	 *
+	 * @param acceptUserId
+	 * @param sendUserId
+	 * @param operType
+	 * @return
+	 */
+	@PostMapping("/operFriendRequest")
+	public ResultVo queryFriendRequests(Integer acceptUserId, Integer sendUserId, Integer operType) {
+		// 0. acceptUserId sendUserId operType 判断不能为空
+		if (acceptUserId == null || sendUserId == null || operType == null) {
+			return ResultVo.errorMsg("");
+		}
+
+		// 1. 如果operType 没有对应的枚举值，则直接抛出空错误信息
+		if (StringUtils.isBlank(OperatorFriendRequestTypeEnum.getMsgByType(operType))) {
+			return ResultVo.errorMsg("");
+		}
+
+		if (OperatorFriendRequestTypeEnum.IGNORE.type.equals(operType)) {
+			// 2. 判断如果忽略好友请求，则直接删除好友请求的数据库表记录
+			friendRequestService.delete(sendUserId, acceptUserId);
+		} else if (OperatorFriendRequestTypeEnum.PASS.type.equals(operType)) {
+			// 3. 判断如果是通过好友请求，则互相增加好友记录到数据库对应的表
+			//	   然后删除好友请求的数据库表记录
+			friendRequestService.passFriendRequest(sendUserId, acceptUserId);
+		}
+
+		// TODO 刷新通讯录
+
+		return ResultVo.ok();
+	}
 }

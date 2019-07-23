@@ -138,6 +138,16 @@ public abstract class BaseService<T extends BaseModel> {
 	}
 
 	/**
+	 * 通过实体删除.
+	 *
+	 * @param t 实体（查询条件）
+	 */
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor=Exception.class)
+	public void delete(T t) {
+		this.mapper.delete(t);
+	}
+
+	/**
 	 * 查询全部.
 	 *
 	 * @return 集合
