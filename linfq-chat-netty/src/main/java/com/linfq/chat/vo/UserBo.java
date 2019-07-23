@@ -19,5 +19,9 @@ public class UserBo {
      * 用户头像Base64.
      */
     private String faceData;
+    /**
+     * 昵称.
+     */
+    private String nickname;
 
 }

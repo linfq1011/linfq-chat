@@ -103,9 +103,34 @@ public class UserController {
 		user.setId(userBo.getUserId());
 		user.setFaceImage(thumpImgUrl);
 		user.setFaceImageBig(url);
-		this.userService.update(user);
+		this.userService.save(user);
 
-		return ResultVo.ok(user);
+		UserVo userVo = new UserVo();
+		BeanUtils.copyProperties(user, userVo);
+
+		return ResultVo.ok(userVo);
+	}
+
+	/**
+	 * 修改昵称.
+	 *
+	 * @param userBo
+	 * @return
+	 */
+	@PostMapping("/setNickname")
+	public ResultVo setNickname(@RequestBody UserBo userBo) {
+		// TODO 参数校验
+
+		// 更新用户头像
+		User user = new User();
+		user.setId(userBo.getUserId());
+		user.setNickname(userBo.getNickname());
+		this.userService.save(user);
+
+		UserVo userVo = new UserVo();
+		BeanUtils.copyProperties(user, userVo);
+
+		return ResultVo.ok(userVo);
 	}
 
 }
