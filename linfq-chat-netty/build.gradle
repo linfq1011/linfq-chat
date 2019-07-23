@@ -62,7 +62,8 @@ dependencies {
     // 高性能分布式文件服务器
     compile group: 'com.github.tobato', name: 'fastdfs-client', version: '1.26.2'
 
-
+    // 二维码
+    compile group: 'com.google.zxing', name: 'javase', version: '3.3.3'
 
 
 

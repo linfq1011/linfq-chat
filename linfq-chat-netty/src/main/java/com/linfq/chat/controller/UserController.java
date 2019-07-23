@@ -103,7 +103,7 @@ public class UserController {
 		user.setId(userBo.getUserId());
 		user.setFaceImage(thumpImgUrl);
 		user.setFaceImageBig(url);
-		this.userService.save(user);
+		user = this.userService.save(user);
 
 		UserVo userVo = new UserVo();
 		BeanUtils.copyProperties(user, userVo);

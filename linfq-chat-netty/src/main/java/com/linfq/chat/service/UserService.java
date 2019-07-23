@@ -1,12 +1,18 @@
 package com.linfq.chat.service;
 
 import com.linfq.chat.common.orm.BaseService;
+import com.linfq.chat.common.util.FastDFSClient;
+import com.linfq.chat.common.util.FileUtils;
+import com.linfq.chat.common.util.QRCodeUtils;
 import com.linfq.chat.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import tk.mybatis.mapper.entity.Example;
 
+import java.io.IOException;
 import java.util.Optional;
 
 /**
@@ -17,6 +23,11 @@ import java.util.Optional;
  */
 @Service
 public class UserService extends BaseService<User> {
+
+	@Autowired
+	private QRCodeUtils qrCodeUtils;
+	@Autowired
+	private FastDFSClient fastDFSClient;
 
 	/**
 	 * 判断用户名是否存在.
@@ -55,9 +66,26 @@ public class UserService extends BaseService<User> {
 	 */
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor=Exception.class)
 	public User saveUser(User user) {
-		// TODO 为每个用户生成一个唯一的二维码
-		user.setQrcode("");
 		this.add(user);
+
+		String qrcodePath = "D://user" + user.getId() + "qrcode.png";
+		// linfq_chat_qrcode:[username]
+		qrCodeUtils.createQRCode(qrcodePath, "linfq_chat_qrcode:" + user.getNickname());
+		MultipartFile qrcodeFile = FileUtils.fileToMultipart(qrcodePath);
+
+		String qrCodeUrl = "";
+		try {
+			qrCodeUrl = fastDFSClient.uploadQRCode(qrcodeFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		User user4Update = new User();
+		user4Update.setId(user.getId());
+		user4Update.setQrcode(qrCodeUrl);
+		this.update(user4Update);
+
+		user = this.get(user.getId()).orElseThrow(RuntimeException::new);
+
 		return user;
 	}
 }
