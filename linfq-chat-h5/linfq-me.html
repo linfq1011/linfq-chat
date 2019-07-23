@@ -97,6 +97,16 @@
 					mui.openWindow("mynickname.html", "mynickname.html");
 				});
 				
+				// 查看我的二维码
+				var link_my_qrcode = document.getElementById("link_my_qrcode");
+				link_my_qrcode.addEventListener("tap", function(){
+					mui.openWindow({
+						url: "myQRCode.html", 
+						id: "myQRCode.html", 
+						styles: {}
+					})
+				});
+				
 			});
 			
 			function refreshUserInfo() {
