@@ -46,6 +46,7 @@
 			
 			mui.plusReady(function() {
 
+				// 刷新头像
 				refreshFace();
 				
 				// 添加自定义事件，刷新头像
@@ -111,6 +112,9 @@
 				});
 			});
 			
+			/**
+			 * 刷新头像
+			 */
 			function refreshFace() {
 				var user = app.getUserGlobalInfo();
 				var img_my_face = document.getElementById("img_myface");

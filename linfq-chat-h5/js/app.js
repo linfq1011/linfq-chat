@@ -13,7 +13,7 @@ window.app = {
 	/**
 	 * 图片服务器的url地址
 	 */
-	imgServerUrl: '',
+	imgServerUrl: 'http://192.168.1.51:88/linfq/',
 	
 	/**
 	 * 判断字符串是否为空
