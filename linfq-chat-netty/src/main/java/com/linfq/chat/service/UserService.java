@@ -52,8 +52,8 @@ public class UserService extends BaseService<User> {
 	/**
 	 * 查询用户是否存在.
 	 *
-	 * @param username
-	 * @param pwd
+	 * @param username 用户名
+	 * @param pwd 密文密码
 	 * @return
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, rollbackFor=Exception.class)
