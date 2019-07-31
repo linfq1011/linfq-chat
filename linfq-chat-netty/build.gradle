@@ -44,6 +44,7 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
     compile group: 'commons-io', name: 'commons-io', version: '2.6'
     compile group: 'commons-codec', name: 'commons-codec', version: '1.12'
+    compile group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
 
     // fastjson
     compile group: 'com.alibaba', name: 'fastjson', version: '1.2.58'

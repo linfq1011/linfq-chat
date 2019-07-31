@@ -5,13 +5,13 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * DataContent.
+ * DataContentVo.
  *
  * @author linfq
  * @date 2019/7/30 23:06
  */
 @Data
-public class DataContent implements Serializable {
+public class DataContentVo implements Serializable {
 
 	/**
 	 * 动作类型.
@@ -20,7 +20,7 @@ public class DataContent implements Serializable {
 	/**
 	 * 用户聊天内容.
 	 */
-	private ChatMsg chatMsg;
+	private ChatMsgVo chatMsgVo;
 	/**
 	 * 扩展字段.
 	 */

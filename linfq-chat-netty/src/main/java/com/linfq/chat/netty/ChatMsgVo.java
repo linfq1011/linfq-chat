@@ -5,13 +5,13 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * ChatMsg.
+ * ChatMsgVo.
  *
  * @author linfq
  * @date 2019/7/30 23:07
  */
 @Data
-public class ChatMsg implements Serializable {
+public class ChatMsgVo implements Serializable {
 
 	/**
 	 * 发送者的用户id.

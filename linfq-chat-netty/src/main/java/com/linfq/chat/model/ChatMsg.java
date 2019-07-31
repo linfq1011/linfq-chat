@@ -38,7 +38,7 @@ public class ChatMsg extends BaseModel {
      * 签收状态
      * sign_flag
      */
-    private Byte signFlag;
+    private Boolean signFlag;
 
 
 }
