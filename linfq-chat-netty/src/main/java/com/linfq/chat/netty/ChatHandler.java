@@ -33,7 +33,7 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
 	/**
 	 * 用于记录和管理所有客户端的channel.
 	 */
-	private static ChannelGroup users = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+	public static ChannelGroup users = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
 	/**
 	 * 消息Service.
@@ -53,18 +53,18 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
 		Integer action = dataContentVo.getAction();
 		if (MsgActionEnum.CONNECT.type.equals(action)) {
 			// 2.1 当websocket第一次open的时候，初始化channel，把用的channel和userid关联起来
-			Integer senderId = dataContentVo.getChatMsgVo().getSenderId();
+			Integer senderId = dataContentVo.getChatMsg().getSenderId();
 			UserChannelRel.put(senderId, currentChannel);
 
-			// 测试
-			for (Channel c : users) {
-				System.out.println(c.id().asLongText());
-			}
-			UserChannelRel.print();
+			/// 测试
+//			for (Channel c : users) {
+//				System.out.println(c.id().asLongText());
+//			}
+//			UserChannelRel.print();
 
 		} else if (MsgActionEnum.CHAT.type.equals(action)) {
 			// 2.2 聊天类型的消息，把聊天记录保存到数据库，同时标记消息的签收状态[未签收]
-			ChatMsgVo chatMsgVo = dataContentVo.getChatMsgVo();
+			ChatMsgVo chatMsgVo = dataContentVo.getChatMsg();
 
 			// 保存消息到数据库，并且标记为[未签收]
 			ChatMsg chatMsg = new ChatMsg();
@@ -76,7 +76,7 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
 			chatMsgVo.setMsgId(chatMsgDb.getId());
 
 			DataContentVo dataContentVoMsg = new DataContentVo();
-			dataContentVoMsg.setChatMsgVo(chatMsgVo);
+			dataContentVoMsg.setChatMsg(chatMsgVo);
 
 			// 发送消息
 			// 从全局用户channel关系中获取接收方的channel
@@ -116,6 +116,7 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
 
 		} else if (MsgActionEnum.KEEPALIVE.type.equals(action)) {
 			// 2.4 心跳类型的消息
+			log.debug("收到来自channel为[{}]的心跳包...", currentChannel);
 		}
 
 	}
@@ -132,6 +133,10 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
 	@Override
 	public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
 		// 当触发handlerRemoved，ChannelGroup会自动移除对应客户端的channel
+
+		String channelId = ctx.channel().id().asShortText();
+		log.info("客户端被移除，channelId为：" + channelId);
+
 		users.remove(ctx.channel());
 	}
 

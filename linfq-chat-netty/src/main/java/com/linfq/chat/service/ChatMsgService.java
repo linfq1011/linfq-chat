@@ -38,4 +38,22 @@ public class ChatMsgService extends BaseService<ChatMsg> {
 		criteria.andIn(ChatMsg::getId, ids);
 		this.mapper.updateByExampleSelective(chatMsg4Update, weekend);
 	}
+
+	/**
+	 * 获取未签收消息列表.
+	 *
+	 * @param acceptUserId
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, rollbackFor=Exception.class)
+	public List<ChatMsg> getUnreadMsgList(Integer acceptUserId) {
+		Weekend<ChatMsg> weekend = Weekend.of(ChatMsg.class);
+		WeekendCriteria<ChatMsg, Object> criteria = weekend.weekendCriteria();
+		criteria.andEqualTo(ChatMsg::getAcceptUserId, acceptUserId);
+		criteria.andEqualTo(ChatMsg::getSignFlag, 0);
+
+		List<ChatMsg> chatMsgs = this.listByExample(weekend);
+
+		return chatMsgs;
+	}
 }

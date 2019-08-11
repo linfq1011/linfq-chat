@@ -1,6 +1,7 @@
 package com.linfq.chat.netty;
 
 import io.netty.channel.Channel;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 
@@ -10,6 +11,7 @@ import java.util.HashMap;
  * @author linfq
  * @date 2019/7/30 23:19
  */
+@Slf4j
 public class UserChannelRel {
 
 	private static HashMap<Integer, Channel> manager = new HashMap<>();
@@ -24,7 +26,7 @@ public class UserChannelRel {
 
 	public static void print() {
 		for (HashMap.Entry<Integer, Channel> entry : manager.entrySet()) {
-			System.out.println("UserId:" + entry.getKey() + ", ChannelId:" + entry.getValue().id().asLongText());
+			log.debug("UserId:" + entry.getKey() + ", ChannelId:" + entry.getValue().id().asLongText());
 		}
 	}
 }

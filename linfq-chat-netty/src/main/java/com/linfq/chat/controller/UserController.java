@@ -5,7 +5,9 @@ import com.linfq.chat.common.constant.SearchFriendsStatusEnum;
 import com.linfq.chat.common.util.FastDFSClient;
 import com.linfq.chat.common.util.FileUtils;
 import com.linfq.chat.common.util.ResultVo;
+import com.linfq.chat.model.ChatMsg;
 import com.linfq.chat.model.User;
+import com.linfq.chat.service.ChatMsgService;
 import com.linfq.chat.service.FriendRequestService;
 import com.linfq.chat.service.MyFriendService;
 import com.linfq.chat.service.UserService;
@@ -43,6 +45,8 @@ public class UserController {
 	private FriendRequestService friendRequestService;
 	@Autowired
 	private MyFriendService myFriendService;
+	@Autowired
+	private ChatMsgService chatMsgService;
 
 	/**
 	 * 用户登录/注册.
@@ -264,5 +268,24 @@ public class UserController {
 		List<MyFriendResultVo> myFirends = myFriendService.listMyFriends(userId);
 
 		return ResultVo.ok(myFirends);
+	}
+
+	/**
+	 * 用户手机端获取未签收的消息列表.
+	 *
+	 * @param acceptUserId
+	 * @return
+	 */
+	@PostMapping("/getUnReadMsgList")
+	public ResultVo getUnReadMsgList(Integer acceptUserId) {
+		// 0. userId 判断不能为空
+		if (acceptUserId == null) {
+			return ResultVo.errorMsg("");
+		}
+
+		// 查询列表
+		List<ChatMsg> unreadMsgList = this.chatMsgService.getUnreadMsgList(acceptUserId);
+
+		return ResultVo.ok(unreadMsgList);
 	}
 }

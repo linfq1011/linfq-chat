@@ -120,7 +120,11 @@ public abstract class BaseService<T extends BaseModel> {
 	 */
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor=Exception.class)
 	public T save(T t) {
-		this.update(t);
+		if (t.getId() == null) {
+			this.add(t);
+		} else {
+			this.update(t);
+		}
 		t = this.mapper.selectByPrimaryKey(t.getId());
 		return t;
 	}

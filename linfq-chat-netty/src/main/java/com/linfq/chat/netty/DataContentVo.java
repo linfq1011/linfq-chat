@@ -20,7 +20,7 @@ public class DataContentVo implements Serializable {
 	/**
 	 * 用户聊天内容.
 	 */
-	private ChatMsgVo chatMsgVo;
+	private ChatMsgVo chatMsg;
 	/**
 	 * 扩展字段.
 	 */
